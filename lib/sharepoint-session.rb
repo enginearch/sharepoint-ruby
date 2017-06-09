@@ -42,7 +42,6 @@ module Sharepoint
     end
 
     def authenticate user, password, sts_url = nil
-      puts "\n\n\n\n\n\n\n\n\n\n CALLED authenticate_to_sts with #{user} #{password} #{sts_url}"
       sts_url ||= MICROSOFT_STS_URL
       authenticate_to_sts user, password, sts_url
       get_access_token
@@ -61,9 +60,6 @@ module Sharepoint
         offset          = ($~.offset 1)
         @security_token = response.body[offset[0]..offset[1] - 1]
       end
-      puts "\n\n\n Security token is ::: #{@security_token} \n\n"
-      puts "\n response is:: \n"
-      pp response
       authentication_failed response.body_str if @security_token.nil?
     end
 

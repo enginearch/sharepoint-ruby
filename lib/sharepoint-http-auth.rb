@@ -12,6 +12,7 @@ module Sharepoint
       end
 
       def authenticate user, password
+        puts "\n\n\n\n AUTH USING NTLM \n\n\n\n"
         @user     = user
         @password = password
       end
