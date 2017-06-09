@@ -42,6 +42,7 @@ module Sharepoint
     end
 
     def authenticate user, password, sts_url = nil
+      puts "\n\n\n\n\n\n\n\n\n\n CALLED authenticate_to_sts with #{user} #{password} #{sts_url}"
       sts_url ||= MICROSOFT_STS_URL
       authenticate_to_sts user, password, sts_url
       get_access_token
