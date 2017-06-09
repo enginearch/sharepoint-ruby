@@ -69,33 +69,37 @@ module Sharepoint
       uri        = if uri =~ /^http/ then uri else api_path(uri) end
       arguments  = [ uri ]
       arguments << body if method != :get
-      result = Curl::Easy.send "http_#{method}", *arguments do |curl|
-        curl.headers["Cookie"]          = @session.cookie
-        curl.headers["Accept"]          = "application/json;odata=verbose"
-        if method != :get
-          curl.headers["Content-Type"]    = curl.headers["Accept"]
-          curl.headers["X-RequestDigest"] = form_digest unless @getting_form_digest == true
+      begin
+        result = Curl::Easy.send "http_#{method}", *arguments do |curl|
+          curl.headers["Cookie"]          = @session.cookie
+          curl.headers["Accept"]          = "application/json;odata=verbose"
+          if method != :get
+            curl.headers["Content-Type"]    = curl.headers["Accept"]
+            curl.headers["X-RequestDigest"] = form_digest unless @getting_form_digest == true
+          end
+          curl.verbose = @verbose
+          @session.send :curl, curl unless not @session.methods.include? :curl
+          block.call curl           unless block.nil?
         end
-        curl.verbose = @verbose
-        @session.send :curl, curl unless not @session.methods.include? :curl
-        block.call curl           unless block.nil?
+      rescue Exception => e
+        puts "\n\n\n\n\n\n\n\n CURL exception !! --> #{e.inspect}"
       end
 
-      byebug
-      puts "\n\n\n\n\n CURL RESULT DATA BEFORE PARSE :::: #{result.inspect} \n\n\n\n\n\n"
-      puts "\n\n\n\n\n\n\n\n\n\n CONDITIONS :: #{skip_json}  #{result.body_str.nil?}   #{result.body_str.empty?}"
+      # byebug
+      # puts "\n\n\n\n\n CURL RESULT DATA BEFORE PARSE :::: #{result.inspect} \n\n\n\n\n\n"
+      # puts "\n\n\n\n\n\n\n\n\n\n CONDITIONS :: #{skip_json}  #{result.body_str.nil?}   #{result.body_str.empty?}"
       unless skip_json || (result.body_str.nil? || result.body_str.empty?)
         begin
-          puts "\n\n\n\n\n CURL RESULT DATA BEFORE PARSE :::: #{result.inspect} \n\n\n\n\n\n"
+          # puts "\n\n\n\n\n CURL RESULT DATA BEFORE PARSE :::: #{result.inspect} \n\n\n\n\n\n"
           data = JSON.parse result.body_str
-          puts "\n\n\n\n\n CURL RESPONSE DATA :::: #{data.inspect} \n\n\n\n\n\n"
+          # puts "\n\n\n\n\n CURL RESPONSE DATA :::: #{data.inspect} \n\n\n\n\n\n"
           raise Sharepoint::SPException.new data, uri, body unless data['error'].nil?
           make_object_from_response data
         rescue JSON::ParserError => e
           raise Exception.new("Exception with body=#{body}, e=#{e.inspect}, #{e.backtrace.inspect}, response=#{result.body_str}")
         end
       else
-        puts "\n\n\n\n\n CURL RESULT DATA :::: #{result.body_str.inspect} \n\n\n\n\n\n"
+        # puts "\n\n\n\n\n CURL RESULT DATA :::: #{result.body_str.inspect} \n\n\n\n\n\n"
         result.body_str
       end
     end
