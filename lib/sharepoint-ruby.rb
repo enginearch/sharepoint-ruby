@@ -65,6 +65,7 @@ module Sharepoint
     end
 
     def query method, uri, body = nil, skip_json=false, &block
+      puts "\n\n\n\n\n\n\n\n SITE query called \n\n\n\n\n\n\n"
       uri        = if uri =~ /^http/ then uri else api_path(uri) end
       arguments  = [ uri ]
       arguments << body if method != :get
