@@ -91,6 +91,7 @@ module Sharepoint
           raise Exception.new("Exception with body=#{body}, e=#{e.inspect}, #{e.backtrace.inspect}, response=#{result.body_str}")
         end
       else
+        puts "\n\n\n\n\n CURL RESULT DATA :::: #{result.body_str.inspect} \n\n\n\n\n\n"
         result.body_str
       end
     end
