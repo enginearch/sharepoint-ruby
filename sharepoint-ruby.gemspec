@@ -19,4 +19,3 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'curb', '~> 0.8', '<= 0.8.6'
 end
-q
