@@ -80,12 +80,11 @@ module Sharepoint
         block.call curl           unless block.nil?
       end
 
-      # auth_error = false
-
-      # if (result.body_str.nil? || result.body_str.empty?)
-      #   # raise Exception.new("Sharepoint authentication problem: \n response headers = #{result.header_str} \n response body = #{result.body_str}")
-      #   auth_error = true
-      # end
+      auth_error = false
+      if result.response_code == 401
+        raise Sharepoint::Session::AuthenticationFailed.new("Sharepoint authentication problem:\nresponse code: #{result.response_code}\nresponse headers = #{result.header_str}\nresponse body = #{result.body_str}")
+        auth_error = true
+      end
 
       unless skip_json || (result.body_str.nil? || result.body_str.empty?)
         begin
