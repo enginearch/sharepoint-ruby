@@ -60,6 +60,9 @@ module Sharepoint
         offset          = ($~.offset 1)
         @security_token = response.body[offset[0]..offset[1] - 1]
       end
+      puts "\n\n\n Security token is ::: #{@security_token} \n\n"
+      puts "\n response is:: \n"
+      pp response
       authentication_failed response.body_str if @security_token.nil?
     end
 
