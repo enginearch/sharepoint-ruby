@@ -80,6 +80,7 @@ module Sharepoint
         block.call curl           unless block.nil?
       end
 
+      error = false
       if (result.body_str.nil? || result.body_str.empty?) && result.header_str.include? "401 Unauthorized"
         # raise Exception.new("Sharepoint authentication problem: \n response headers = #{result.header_str} \n response body = #{result.body_str}")
         error = true
