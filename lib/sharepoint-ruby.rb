@@ -84,6 +84,7 @@ module Sharepoint
       unless skip_json || (result.body_str.nil? || result.body_str.empty?)
         begin
           data = JSON.parse result.body_str
+          puts "\n\n\n\n\n CURL RESPONSE DATA :::: #{data.inspect} \n\n\n\n\n\n"
           raise Sharepoint::SPException.new data, uri, body unless data['error'].nil?
           make_object_from_response data
         rescue JSON::ParserError => e
