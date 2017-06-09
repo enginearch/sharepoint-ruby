@@ -81,6 +81,7 @@ module Sharepoint
         block.call curl           unless block.nil?
       end
 
+      puts "\n\n\n\n\n CURL RESULT DATA BEFORE PARSE :::: #{result.inspect} \n\n\n\n\n\n"
       puts "\n\n\n\n\n\n\n\n\n\n CONDITIONS :: #{skip_json}  #{result.body_str.nil?}   #{result.body_str.empty?}"
       unless skip_json || (result.body_str.nil? || result.body_str.empty?)
         begin
