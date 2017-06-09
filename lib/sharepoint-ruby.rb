@@ -80,14 +80,14 @@ module Sharepoint
         block.call curl           unless block.nil?
       end
 
-      auth_error = false
+      # auth_error = false
 
       # if (result.body_str.nil? || result.body_str.empty?)
       #   # raise Exception.new("Sharepoint authentication problem: \n response headers = #{result.header_str} \n response body = #{result.body_str}")
       #   auth_error = true
       # end
 
-      unless auth_error || skip_json || (result.body_str.nil? || result.body_str.empty?)
+      unless skip_json || (result.body_str.nil? || result.body_str.empty?)
         begin
           data = JSON.parse result.body_str
           raise Sharepoint::SPException.new data, uri, body unless data['error'].nil?
